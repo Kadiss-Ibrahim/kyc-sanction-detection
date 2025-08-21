@@ -20,13 +20,10 @@ public abstract class Personne {
     private String commentaire;
     private Sexe sexe;
 
-    @Column(unique = true)
+//    @Column(unique = true)
     private String numeroIdentite;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nationalite_code_libelle", referencedColumnName = "codeLibelle")
-    private Nationalite nationalite;
+    private String nationalite;
 
     public String getNom() {
         return nom;
@@ -84,11 +81,11 @@ public abstract class Personne {
         this.numeroIdentite = numeroIdentite;
     }
 
-    public Nationalite getNationalite() {
+    public String getNationalite() {
         return nationalite;
     }
 
-    public void setNationalite(Nationalite nationalite) {
+    public void setNationalite(String nationalite) {
         this.nationalite = nationalite;
     }
 }

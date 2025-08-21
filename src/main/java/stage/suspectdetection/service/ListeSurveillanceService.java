@@ -7,4 +7,6 @@ public interface ListeSurveillanceService {
     ListeSurveillance createList(String nom, String source);
     ListeSurveillance getById(Long id);
     List<ListeSurveillance> getAll();
+    void delete(Long id);
+
 }

@@ -5,9 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stage.suspectdetection.entities.Client;
 import stage.suspectdetection.entities.PersonneSanctionnee;
-import stage.suspectdetection.service.MatchingService;
-import stage.suspectdetection.service.ClientService;
-import stage.suspectdetection.service.CasSuspectService;
+import stage.suspectdetection.entities.Utilisateur;
+import stage.suspectdetection.service.*;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -20,16 +19,21 @@ public class MatchingServiceImpl implements MatchingService {
 
     private final ClientService clientService;
     private final CasSuspectService casService;
-
-    // Distance de Levenshtein pour comparer la similarité des chaînes
+    private final PersonneSanctionneeService sanctionneeService;
+    private final NotificationService notificationService;
     private final LevenshteinDistance lev = new LevenshteinDistance();
 
     // Barème des poids : clé = nom du champ, valeur = tableau {equalWeight, emptyWeight, nonEqualWeight}
     private final Map<String, int[]> weights = new HashMap<>();
 
-    public MatchingServiceImpl(ClientService clientService, CasSuspectService casService) {
+    public MatchingServiceImpl(ClientService clientService,
+                               CasSuspectService casService,
+                               PersonneSanctionneeService sanctionneeService,
+                               NotificationService notificationService) {
         this.clientService = clientService;
         this.casService = casService;
+        this.sanctionneeService = sanctionneeService;
+        this.notificationService = notificationService;
 
         // Initialisation des poids selon le tableau fourni
         weights.put("pertinent1", new int[]{75, 15, 0});
@@ -43,20 +47,36 @@ public class MatchingServiceImpl implements MatchingService {
         weights.put("pays", new int[]{20, 20, 0});
         weights.put("dob", new int[]{20, 20, 0});
     }
+    @Override
+    public void evaluateAllMatches() {
+        List<PersonneSanctionnee> sanctionnees = sanctionneeService.getAll();
+        int totalCasDetectes = 0;
 
+        for (PersonneSanctionnee p : sanctionnees) {
+            totalCasDetectes += evaluateMatches(p);
+        }
+
+        // Après avoir fini le matching global, envoyer notification
+        String msg = totalCasDetectes + " cas suspects détectés lors de la dernière actualisation.";
+        notificationService.envoyerNotification(msg);
+    }
     /**
      * Évalue tous les clients par rapport à une personne sanctionnée.
      * Si le score >= 85%, on enregistre un cas suspect.
      */
     @Override
-    public void evaluateMatches(PersonneSanctionnee sanctionedPerson) {
+    public int evaluateMatches(PersonneSanctionnee sanctionedPerson) {
         List<Client> clients = clientService.getAllClients();
+        int nbCasDetectes = 0;
         for (Client c : clients) {
             double score = calculateMatchScore(c, sanctionedPerson);
-            if (score >= 0.85) { // Seuil configurable
+            if (score >= 0.85) {
+                nbCasDetectes++;
                 casService.saveSuspectCase(c, sanctionedPerson, score);
             }
         }
+        return nbCasDetectes;
+
     }
 
     /**
@@ -95,8 +115,8 @@ public class MatchingServiceImpl implements MatchingService {
 
         // Pays
         totalScore += computeFieldSimple(weights.get("pays"),
-                client.getNationalite() == null ? "" : safe(client.getNationalite().getLibelle()),
-                p.getNationalite() == null ? "" : safe(p.getNationalite().getLibelle()));
+                client.getNationalite() == null ? "" : safe(client.getNationalite()),
+                p.getNationalite() == null ? "" : safe(p.getNationalite()));
         totalPossible += weights.get("pays")[0];
 
         // Date de naissance
@@ -136,7 +156,7 @@ public class MatchingServiceImpl implements MatchingService {
     private double levenshteinSimilarity(String s1, String s2) {
         if (isEmpty(s1) || isEmpty(s2)) return 0.0;
         int max = Math.max(s1.length(), s2.length());
-        int dist = lev.apply(s1.toLowerCase().trim(), s2.toLowerCase().trim());
+        int dist = lev.apply(safe(s1), safe(s2));
         return Math.max(0, Math.min(1, 1.0 - ((double) dist / max)));
     }
 
@@ -148,4 +168,13 @@ public class MatchingServiceImpl implements MatchingService {
     private String safe(String s) {
         return s == null ? "" : s.trim().toLowerCase();
     }
+//Pour test
+    public ClientService getClientService() {
+        return this.clientService;
+    }
+
+    public PersonneSanctionneeService getSanctionneeService() {
+        return this.sanctionneeService;
+    }
+
 }

@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 
 public interface CasSuspectRepository extends JpaRepository<CasSuspect, Long> {
-    List<CasSuspect> findByClientId(String clientId);
+    List<CasSuspect> findByClientId(Long clientId);
     List<CasSuspect> findByDateDetectionBetween(LocalDate startDate, LocalDate endDate);
 }

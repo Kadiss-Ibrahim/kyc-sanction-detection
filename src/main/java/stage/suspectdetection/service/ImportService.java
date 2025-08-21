@@ -8,4 +8,5 @@ public interface ImportService {
      * @param listeId id de la liste de surveillance
      */
     void importSanctions(org.springframework.web.multipart.MultipartFile file, Long listeId) throws Exception;
+    void importClients(MultipartFile file) throws Exception;
 }

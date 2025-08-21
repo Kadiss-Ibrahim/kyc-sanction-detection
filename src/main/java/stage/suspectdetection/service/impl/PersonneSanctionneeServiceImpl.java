@@ -1,5 +1,6 @@
 package stage.suspectdetection.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stage.suspectdetection.entities.PersonneSanctionnee;
@@ -19,7 +20,7 @@ public class PersonneSanctionneeServiceImpl implements PersonneSanctionneeServic
     }
 
     @Override
-    public PersonneSanctionnee getById(String id) {
+    public PersonneSanctionnee getById(Long id) {
         return repo.findById(id).orElse(null);
     }
 
@@ -34,17 +35,20 @@ public class PersonneSanctionneeServiceImpl implements PersonneSanctionneeServic
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(Long id) {
+        if (!repo.existsById(id)) {
+            throw new EntityNotFoundException("Aucun enregistrement trouvé avec id = " + id);
+        }
         repo.deleteById(id);
     }
 
     @Override
-    public boolean isSanctionnee(String id) {
+    public boolean isSanctionnee(Long id) {
         return repo.existsById(id);
     }
 
     @Override
-    public void updateSanctionnees(List<String> idsSanctionnes) {
+    public void updateSanctionnees(List<Long> idsSanctionnes) {
         List<PersonneSanctionnee> toutes = repo.findAll();
         for (PersonneSanctionnee p : toutes) {
             boolean est = idsSanctionnes.contains(p.getId());
@@ -53,5 +57,17 @@ public class PersonneSanctionneeServiceImpl implements PersonneSanctionneeServic
                 repo.save(p);
             }
         }
+    }
+    @Override
+    @Transactional
+    public void saveAll(List<PersonneSanctionnee> personnes) {
+        for (PersonneSanctionnee p : personnes) {
+            repo.save(p);
+        }
+    }
+    @Override
+    @Transactional
+    public void deleteAll() {
+        repo.deleteAll();
     }
 }

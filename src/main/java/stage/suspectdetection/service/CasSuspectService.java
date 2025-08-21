@@ -8,6 +8,7 @@ import java.util.List;
 public interface CasSuspectService {
     CasSuspect saveSuspectCase(Client client, PersonneSanctionnee sanctionedPerson, double score);
     List<CasSuspect> getAllCases();
-    List<CasSuspect> getCasesByClientId(String clientId);
+    List<CasSuspect> getCasesByClientId(Long clientId);
     CasSuspect updateStatus(Long id, String statut); // statut -> map sur Enum si besoin
+    void delete(Long id);
 }

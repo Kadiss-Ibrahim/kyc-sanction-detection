@@ -1,5 +1,6 @@
 package stage.suspectdetection.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stage.suspectdetection.entities.ListeSurveillance;
@@ -34,5 +35,14 @@ public class ListeSurveillanceServiceImpl implements ListeSurveillanceService {
     @Override
     public List<ListeSurveillance> getAll() {
         return repo.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        if (!repo.existsById(id)) {
+            throw new EntityNotFoundException("Aucun enregistrement trouvé avec id = " + id);
+        }
+        repo.deleteById(id);
     }
 }

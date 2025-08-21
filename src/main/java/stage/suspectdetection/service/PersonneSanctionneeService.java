@@ -4,10 +4,13 @@ import stage.suspectdetection.entities.PersonneSanctionnee;
 import java.util.List;
 
 public interface PersonneSanctionneeService {
-    PersonneSanctionnee getById(String id);
+    PersonneSanctionnee getById(Long id);
     List<PersonneSanctionnee> getAll();
     PersonneSanctionnee save(PersonneSanctionnee p);
-    void delete(String id);
-    boolean isSanctionnee(String id);
-    void updateSanctionnees(java.util.List<String> idsSanctionnes);
+    void delete(Long id);
+    boolean isSanctionnee(Long id);
+    void updateSanctionnees(java.util.List<Long> idsSanctionnes);
+    void saveAll(List<PersonneSanctionnee> personnes);
+
+    void deleteAll();
 }

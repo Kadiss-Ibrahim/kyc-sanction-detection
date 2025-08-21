@@ -5,6 +5,9 @@ import java.util.List;
 
 public interface ClientService {
     List<Client> getAllClients();
-    Client getById(String id);
+    Client getById(Long id);
     Client save(Client c);
+    void saveAll(List<Client> clients);
+    void deleteAll();
+    void delete(Long id);
 }

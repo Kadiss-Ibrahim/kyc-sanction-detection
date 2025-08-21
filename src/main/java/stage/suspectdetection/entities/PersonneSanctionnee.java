@@ -13,7 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PersonneSanctionnee extends Personne {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     //Pour les personnes supprimer de la liste
     private boolean sanctionnee;
 
@@ -21,11 +22,11 @@ public class PersonneSanctionnee extends Personne {
     @JoinColumn(name = "liste_surveillance_id")
     private ListeSurveillance listeSurveillance;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

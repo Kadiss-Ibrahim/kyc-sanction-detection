@@ -9,17 +9,17 @@ import stage.suspectdetection.enums.EtatCasSuspect;
 
 import java.time.LocalDate;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true) //  on inclut uniquement l'id
 public class CasSuspect extends Personne {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
-    @Temporal(TemporalType.DATE)
     private LocalDate dateDetection;
     private Double scoreSimilaritee;
 
