@@ -9,7 +9,6 @@ import stage.suspectdetection.entities.Client;
 import stage.suspectdetection.entities.Notification;
 import stage.suspectdetection.entities.PersonneSanctionnee;
 import stage.suspectdetection.enums.Sexe;
-import stage.suspectdetection.service.MatchingService;
 import stage.suspectdetection.service.NotificationService;
 import stage.suspectdetection.service.impl.MatchingServiceImpl;
 

@@ -8,6 +8,7 @@ import stage.suspectdetection.entities.PersonneSanctionnee;
 import stage.suspectdetection.entities.Utilisateur;
 import stage.suspectdetection.service.*;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -166,13 +167,30 @@ public class MatchingServiceImpl implements MatchingService {
     }
 
     private String safe(String s) {
-        return s == null ? "" : s.trim().toLowerCase();
+        if (s == null) return "";
+
+        // Supprimer les espaces début/fin et mettre en minuscule
+        String result = s.trim().toLowerCase();
+
+        // Normaliser et supprimer les accents
+        result = Normalizer.normalize(result, Normalizer.Form.NFD);
+        result = result.replaceAll("\\p{M}", ""); // enlève les diacritiques
+
+        // Supprimer tout caractère non alphabétique (optionnel selon ton besoin)
+        result = result.replaceAll("[^a-z0-9 ]", "");
+
+        // Remplacer les espaces multiples par un seul
+        result = result.replaceAll("\\s+", " ");
+
+        return result;
     }
+
 //Pour test
     public ClientService getClientService() {
         return this.clientService;
     }
 
+    @Override
     public PersonneSanctionneeService getSanctionneeService() {
         return this.sanctionneeService;
     }

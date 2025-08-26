@@ -1,6 +1,7 @@
 package stage.suspectdetection.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import stage.suspectdetection.entities.Notification;
 import stage.suspectdetection.entities.Utilisateur;
 import stage.suspectdetection.repositories.NotificationRepository;
@@ -9,6 +10,7 @@ import stage.suspectdetection.service.NotificationService;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
@@ -29,6 +31,7 @@ public class NotificationServiceImpl implements NotificationService {
         return lastNotification;
     }
     public Notification getLastNotification() {
+        lastNotification.setLu(true);
         return this.lastNotification;
     }
 

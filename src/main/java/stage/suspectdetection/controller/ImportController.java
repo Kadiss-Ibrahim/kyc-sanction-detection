@@ -16,9 +16,6 @@ public class ImportController {
         this.importService = importService;
     }
 
-    /**
-     * Importation des personnes sanctionnées dans une liste spécifique
-     */
     @PostMapping("/sanctions/{listeId}")
     public ResponseEntity<String> importSanctions(
             @PathVariable Long listeId,
@@ -33,9 +30,6 @@ public class ImportController {
         }
     }
 
-    /**
-     * Importation des clients
-     */
     @PostMapping("/clients")
     public ResponseEntity<String> importClients(
             @RequestParam("file") MultipartFile file) {

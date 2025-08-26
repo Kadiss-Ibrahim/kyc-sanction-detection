@@ -39,6 +39,20 @@ public class ListeSurveillanceServiceImpl implements ListeSurveillanceService {
 
     @Override
     @Transactional
+    public ListeSurveillance update(Long id, String nomListe, String source) {
+        ListeSurveillance liste = repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Liste introuvable avec id = " + id));
+        if (nomListe != null && !nomListe.isEmpty()) {
+            liste.setNomListe(nomListe);
+        }
+        if (source != null && !source.isEmpty()) {
+            liste.setSource(source);
+        }
+        return repo.save(liste);
+    }
+
+    @Override
+    @Transactional
     public void delete(Long id) {
         if (!repo.existsById(id)) {
             throw new EntityNotFoundException("Aucun enregistrement trouvé avec id = " + id);

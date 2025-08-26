@@ -8,5 +8,6 @@ public interface ListeSurveillanceService {
     ListeSurveillance getById(Long id);
     List<ListeSurveillance> getAll();
     void delete(Long id);
+    ListeSurveillance update(Long id, String nomListe, String source);
 
 }

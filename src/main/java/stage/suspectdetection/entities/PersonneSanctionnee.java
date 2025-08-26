@@ -16,7 +16,7 @@ public class PersonneSanctionnee extends Personne {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     //Pour les personnes supprimer de la liste
-    private boolean sanctionnee;
+    private boolean sanctionnee = true;
 
     @ManyToOne
     @JoinColumn(name = "liste_surveillance_id")
