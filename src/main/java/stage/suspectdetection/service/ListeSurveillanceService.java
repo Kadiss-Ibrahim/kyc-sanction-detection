@@ -9,5 +9,6 @@ public interface ListeSurveillanceService {
     List<ListeSurveillance> getAll();
     void delete(Long id);
     ListeSurveillance update(Long id, String nomListe, String source);
-
+    List<ListeSurveillance> searchListesSurveillance(String searchTerm);
+    long getTotalListesSurveillanceCount();
 }

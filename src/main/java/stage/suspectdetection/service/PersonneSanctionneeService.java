@@ -9,8 +9,10 @@ public interface PersonneSanctionneeService {
     PersonneSanctionnee save(PersonneSanctionnee p);
     void delete(Long id);
     boolean isSanctionnee(Long id);
-    void updateSanctionnees(java.util.List<Long> idsSanctionnes);
+    PersonneSanctionnee updatePersonne(Long id, PersonneSanctionnee updatedPersonne);
     void saveAll(List<PersonneSanctionnee> personnes);
-
+    List<PersonneSanctionnee> getByListe(Long listeId);
     void deleteAll();
+    List<PersonneSanctionnee> searchPersonnesSanctionnees(String searchTerm);
+    long getTotalPersonnesSanctionneesCount();
 }

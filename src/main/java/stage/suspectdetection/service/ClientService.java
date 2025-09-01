@@ -10,4 +10,7 @@ public interface ClientService {
     void saveAll(List<Client> clients);
     void deleteAll();
     void delete(Long id);
+    Client updateClient(Long id, Client payload);
+    List<Client> searchClients(String searchTerm);
+    long getTotalClientsCount();
 }

@@ -55,4 +55,31 @@ public class ClientServiceImpl implements ClientService {
         }
         repo.deleteById(id);
     }
+    @Override
+    public Client updateClient(Long id, Client payload) {
+        Client existing = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client non trouvé"));
+
+        existing.setNom(payload.getNom());
+        existing.setPrenom(payload.getPrenom());
+        existing.setNumeroIdentite(payload.getNumeroIdentite());
+        existing.setAdresse(payload.getAdresse());
+        existing.setNationalite(payload.getNationalite());
+        existing.setDateNaissance(payload.getDateNaissance());
+        existing.setSexe(payload.getSexe());
+        existing.setCommentaire(payload.getCommentaire());
+
+        return repo.save(existing);
+    }
+
+    @Override
+    public List<Client> searchClients(String searchTerm) {
+        return repo.searchClients(searchTerm);
+    }
+
+    @Override
+    public long getTotalClientsCount() {
+        return repo.count();
+    }
+
 }

@@ -37,19 +37,6 @@ public class MatchingController {
     }
 
     /**
-     * Obtenir la dernière notification générée après le matching.
-     */
-    @GetMapping("/notification/last")
-    public ResponseEntity<Notification> getLastNotification() {
-        Notification notif = notificationService.getLastNotification();
-        if (notif != null) {
-            return ResponseEntity.ok(notif);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
-    }
-
-    /**
      * Tester le matching pour une personne sanctionnée spécifique
      */
     @PostMapping("/test/{sanctionId}")

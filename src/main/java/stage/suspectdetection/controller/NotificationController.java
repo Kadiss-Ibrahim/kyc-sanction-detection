@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import stage.suspectdetection.entities.Notification;
 import stage.suspectdetection.service.NotificationService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/notifications")
 public class NotificationController {
@@ -18,10 +20,11 @@ public class NotificationController {
         Notification last = service.getLastNotification();
         return (last != null) ? ResponseEntity.ok(last) : ResponseEntity.noContent().build();
     }
-
-    @PostMapping("/send")
-    public ResponseEntity<Notification> send(@RequestParam String message) {
-        Notification n = service.envoyerNotification(message);
-        return ResponseEntity.status(201).body(n);
+    @GetMapping("/all")
+    public ResponseEntity<List<Notification>> getAll() {
+        List<Notification> notifications = service.getAllNotifications();
+        return notifications.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(notifications);
     }
 }

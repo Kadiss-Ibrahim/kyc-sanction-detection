@@ -1,10 +1,15 @@
 package stage.suspectdetection.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -20,7 +25,23 @@ public class PersonneSanctionnee extends Personne {
 
     @ManyToOne
     @JoinColumn(name = "liste_surveillance_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private ListeSurveillance listeSurveillance;
+
+    private LocalDateTime dateCreation;
+
+
+    @PrePersist
+    protected void onCreate() {
+        this.dateCreation = LocalDateTime.now(); // ⬅auto initialisation
+    }
+    public LocalDateTime getDateCreation() {
+        return dateCreation;
+    }
+    public void setDateCreation(LocalDateTime dateMiseAJour) {
+        this.dateCreation = dateMiseAJour;
+    }
+
 
     public Long getId() {
         return id;

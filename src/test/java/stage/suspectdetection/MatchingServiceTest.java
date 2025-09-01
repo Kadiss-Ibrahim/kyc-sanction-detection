@@ -3,8 +3,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
-import org.springframework.transaction.annotation.Transactional;
 import stage.suspectdetection.entities.Client;
 import stage.suspectdetection.entities.Notification;
 import stage.suspectdetection.entities.PersonneSanctionnee;
@@ -39,20 +37,20 @@ public class MatchingServiceTest {
         Client client1 = new Client();
         client1.setNom("Ibrahim");
         client1.setPrenom("Kadiss");
-        client1.setSexe(Sexe.MASCULIN);
+        client1.setSexe(Sexe.HOMME);
         client1.setNumeroIdentite("123456");
 
         Client client2 = new Client();
         client2.setNom("Youssef");
         client2.setPrenom("Ait-Kadiss");
-        client2.setSexe(Sexe.MASCULIN);
+        client2.setSexe(Sexe.HOMME);
         client2.setNumeroIdentite("654321");
 
 // Personnes sanctionnées fictives
         PersonneSanctionnee ps1 = new PersonneSanctionnee();
         ps1.setNom("Ibrahim");
         ps1.setPrenom("Kadiss");
-        ps1.setSexe(Sexe.MASCULIN);
+        ps1.setSexe(Sexe.HOMME);
         ps1.setNumeroIdentite("123456");
 
         matchingService.getClientService().saveAll(Arrays.asList(client1, client2));
@@ -70,7 +68,7 @@ public class MatchingServiceTest {
         Client client1 = new Client();
         client1.setNom("Ibrahim");
         client1.setPrenom("Kadiss");
-        client1.setSexe(Sexe.MASCULIN);
+        client1.setSexe(Sexe.HOMME);
         client1.setNumeroIdentite("123456");
         client1.setNationalite("Mroc");
 
@@ -78,13 +76,13 @@ public class MatchingServiceTest {
         Client client2 = new Client();
         client2.setNom("Youssef");
         client2.setPrenom("Ait-Kadiss");
-        client2.setSexe(Sexe.MASCULIN);
+        client2.setSexe(Sexe.HOMME);
         client2.setNumeroIdentite("654321");
 
         Client client3 = new Client();
         client3.setNom("Mouad");
         client3.setPrenom("Kadsos");
-        client3.setSexe(Sexe.MASCULIN);
+        client3.setSexe(Sexe.HOMME);
         client3.setNumeroIdentite("7654");
         client3.setAdresse("sidi maarouf");
         client3.setCommentaire("khatar");
@@ -93,7 +91,7 @@ public class MatchingServiceTest {
         PersonneSanctionnee ps1 = new PersonneSanctionnee();
         ps1.setNom("Ibrahim");
         ps1.setPrenom("Kadiss");
-        ps1.setSexe(Sexe.MASCULIN);
+        ps1.setSexe(Sexe.HOMME);
         ps1.setNumeroIdentite("123456");
         ps1.setAdresse("sidi maarouf");
         ps1.setCommentaire("khataR");
@@ -102,13 +100,13 @@ public class MatchingServiceTest {
         PersonneSanctionnee ps2 = new PersonneSanctionnee();
         ps2.setNom("Youss");
         ps2.setPrenom("Ait-Kadiss");
-        ps2.setSexe(Sexe.FEMININ);
+        ps2.setSexe(Sexe.FEMME);
         ps2.setNumeroIdentite("654321");
 
         PersonneSanctionnee ps3 = new PersonneSanctionnee();
         ps3.setNom("Mouad");
         ps3.setPrenom("Kadss");
-        ps3.setSexe(Sexe.MASCULIN);
+        ps3.setSexe(Sexe.HOMME);
         ps3.setNumeroIdentite("987654");
         ps3.setAdresse("sidi maarouf");
         ps3.setCommentaire("khataR");
@@ -128,14 +126,14 @@ public class MatchingServiceTest {
         Client client1 = new Client();
         client1.setNom("Ibrahim");
         client1.setPrenom("Kadiss");
-        client1.setSexe(Sexe.MASCULIN);
+        client1.setSexe(Sexe.HOMME);
         client1.setNumeroIdentite("123456");
 
 
         PersonneSanctionnee ps2 = new PersonneSanctionnee();
         ps2.setNom("John");
         ps2.setPrenom("Doe");
-        ps2.setSexe(Sexe.MASCULIN);
+        ps2.setSexe(Sexe.HOMME);
         ps2.setNumeroIdentite("987654");
         matchingService.getClientService().save(client1);
         matchingService.getSanctionneeService().save(ps2);
