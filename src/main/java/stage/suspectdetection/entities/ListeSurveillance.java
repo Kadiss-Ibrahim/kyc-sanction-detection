@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -19,13 +20,22 @@ public class ListeSurveillance {
     private String nomListe;
     private String source;
 
-    @OneToMany(mappedBy = "listeSurveillance")
+    @OneToMany(mappedBy = "listeSurveillance", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PersonneSanctionnee> personnes;
+
+    private LocalDate dateCreation;
+
+    public LocalDate getDateCreation() {
+        return dateCreation;
+    }
+
+    public void setDateCreation(LocalDate dateCreation) {
+        this.dateCreation = dateCreation;
+    }
 
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }

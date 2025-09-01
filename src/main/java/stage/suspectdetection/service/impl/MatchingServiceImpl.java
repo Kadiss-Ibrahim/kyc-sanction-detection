@@ -10,6 +10,7 @@ import stage.suspectdetection.service.*;
 
 import java.text.Normalizer;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,33 +58,37 @@ public class MatchingServiceImpl implements MatchingService {
             totalCasDetectes += evaluateMatches(p);
         }
 
-        // Après avoir fini le matching global, envoyer notification
+        // 🔹 Après avoir évalué tout le monde, mettre à jour la dateMiseAJour
+        List<Client> clients = clientService.getAllClients();
+        LocalDateTime now = LocalDateTime.now();
+        for (Client c : clients) {
+            c.setDateMiseAJour(now);
+            clientService.save(c); // persister la mise à jour
+        }
+
+        // 🔔 Envoyer notification
         String msg = totalCasDetectes + " cas suspects détectés lors de la dernière actualisation.";
         notificationService.envoyerNotification(msg);
     }
-    /**
-     * Évalue tous les clients par rapport à une personne sanctionnée.
-     * Si le score >= 85%, on enregistre un cas suspect.
-     */
+
     @Override
     public int evaluateMatches(PersonneSanctionnee sanctionedPerson) {
         List<Client> clients = clientService.getAllClients();
         int nbCasDetectes = 0;
+
         for (Client c : clients) {
-            double score = calculateMatchScore(c, sanctionedPerson);
-            if (score >= 0.85) {
-                nbCasDetectes++;
-                casService.saveSuspectCase(c, sanctionedPerson, score);
+            // 🔹 Ne traiter que si le client n'a pas encore été mis à jour
+            if (c.getDateMiseAJour() == null || c.getDateMiseAJour().isBefore(sanctionedPerson.getDateCreation())) {
+                double score = calculateMatchScore(c, sanctionedPerson);
+                if (score >= 0.85) {
+                    nbCasDetectes++;
+                    casService.saveSuspectCase(c, sanctionedPerson, score);
+                }
             }
         }
         return nbCasDetectes;
-
     }
 
-    /**
-     * Calcule le score global entre un client et une personne sanctionnée
-     * en appliquant le barème et la similarité de Levenshtein.
-     */
     private double calculateMatchScore(Client client, PersonneSanctionnee p) {
         double totalPossible = 0.0;
         double totalScore = 0.0;
@@ -128,7 +133,6 @@ public class MatchingServiceImpl implements MatchingService {
         return totalScore / totalPossible;
     }
 
-    /** Compare deux chaînes avec Levenshtein et pondère selon les poids */
     private double computeField(String key, String a, String b) {
         int[] w = weights.get(key);
         if (isEmpty(a) && isEmpty(b)) return w[1];
@@ -139,21 +143,18 @@ public class MatchingServiceImpl implements MatchingService {
         return w[2] + (w[0] - w[2]) * similarity;
     }
 
-    /** Compare simplement sans Levenshtein (exact match ou vide) */
     private double computeFieldSimple(int[] w, String a, String b) {
         if (isEmpty(a) && isEmpty(b)) return w[1];
         if (!isEmpty(a) && !isEmpty(b) && a.equalsIgnoreCase(b)) return w[0];
         return w[2];
     }
 
-    /** Compare des dates avec poids */
     private double computeDateField(int[] w, LocalDate d1, LocalDate d2) {
         if (d1 == null && d2 == null) return w[1];
         if (d1 != null && d2 != null && d1.equals(d2)) return w[0];
         return w[2];
     }
 
-    /** Calcul de similarité Levenshtein normalisée (0 à 1) */
     private double levenshteinSimilarity(String s1, String s2) {
         if (isEmpty(s1) || isEmpty(s2)) return 0.0;
         int max = Math.max(s1.length(), s2.length());
@@ -161,7 +162,6 @@ public class MatchingServiceImpl implements MatchingService {
         return Math.max(0, Math.min(1, 1.0 - ((double) dist / max)));
     }
 
-    /** Helpers */
     private boolean isEmpty(String s) {
         return s == null || s.trim().isEmpty();
     }

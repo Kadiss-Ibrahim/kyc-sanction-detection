@@ -8,6 +8,7 @@ import stage.suspectdetection.repositories.NotificationRepository;
 import stage.suspectdetection.service.NotificationService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -30,9 +31,17 @@ public class NotificationServiceImpl implements NotificationService {
         this.lastNotification =notificationRepository.save(notif);
         return lastNotification;
     }
+    @Override
     public Notification getLastNotification() {
+        if (lastNotification == null) {
+            return null;
+        }
         lastNotification.setLu(true);
         return this.lastNotification;
     }
 
+    @Override
+    public List<Notification> getAllNotifications() {
+        return notificationRepository.findAll();
+    }
 }

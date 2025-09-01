@@ -16,12 +16,26 @@ public class ClientController {
     public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<Client>> searchClients(
+            @RequestParam(required = false) String searchTerm) {
+
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return ResponseEntity.ok(clientService.getAllClients());
+        }
+
+        List<Client> clients = clientService.searchClients(searchTerm);
+        return ResponseEntity.ok(clients);
+    }
 
     @GetMapping
     public ResponseEntity<List<Client>> getAll() {
         return ResponseEntity.ok(clientService.getAllClients());
     }
-
+    @GetMapping("/count")
+    public ResponseEntity<Long> getClientsCount() {
+        return ResponseEntity.ok(clientService.getTotalClientsCount());
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Client> getById(@PathVariable Long id) {
         Client c = clientService.getById(id);
@@ -42,16 +56,11 @@ public class ClientController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Client> update(@PathVariable Long id, @RequestBody Client payload) {
-        Client existing = clientService.getById(id);
-        if (existing == null) return ResponseEntity.notFound().build();
-
-        existing.setNom(payload.getNom());
-        existing.setPrenom(payload.getPrenom());
-        existing.setNumeroIdentite(payload.getNumeroIdentite());
-        existing.setAdresse(payload.getAdresse());
-        existing.setDateNaissance(payload.getDateNaissance());
-        clientService.save(existing);
-        return ResponseEntity.ok(existing);
+        try {
+            return ResponseEntity.ok(clientService.updateClient(id, payload));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -60,9 +69,4 @@ public class ClientController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteAll() {
-        clientService.deleteAll();
-        return ResponseEntity.noContent().build();
-    }
 }

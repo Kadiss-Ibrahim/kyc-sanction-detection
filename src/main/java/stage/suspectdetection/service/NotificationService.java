@@ -3,9 +3,11 @@ package stage.suspectdetection.service;
 import stage.suspectdetection.entities.Notification;
 import stage.suspectdetection.entities.Utilisateur;
 
+import java.util.List;
+
 public interface NotificationService {
-//    void sendStatistics(String message);
-//    void pushNotification(Object payload);
    Notification envoyerNotification(String message);
-   public Notification getLastNotification();
+   Notification getLastNotification();
+   List<Notification> getAllNotifications();
+
 }

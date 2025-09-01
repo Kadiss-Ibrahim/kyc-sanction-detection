@@ -1,5 +1,6 @@
 package stage.suspectdetection.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,10 +29,12 @@ public class CasSuspect extends Personne {
 
     @ManyToOne
     @JoinColumn(name = "client_id")
+    @JsonIgnore
     private Client client;
 
     @ManyToOne
     @JoinColumn(name = "personne_sanctionnee_id")
+    @JsonIgnore
     private PersonneSanctionnee personneSanctionnee;
 
     public Long getId() {

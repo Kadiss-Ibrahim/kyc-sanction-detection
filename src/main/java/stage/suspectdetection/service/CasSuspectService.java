@@ -11,4 +11,6 @@ public interface CasSuspectService {
     List<CasSuspect> getCasesByClientId(Long clientId);
     CasSuspect updateStatus(Long id, String statut); // statut -> map sur Enum si besoin
     void delete(Long id);
+    List<CasSuspect> searchCasSuspects(String searchTerm);
+    long getTotalCasSuspectsCount();
 }

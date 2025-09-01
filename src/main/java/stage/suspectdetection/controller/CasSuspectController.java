@@ -13,9 +13,24 @@ public class CasSuspectController {
     private final CasSuspectService service;
     public CasSuspectController(CasSuspectService service) { this.service = service; }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<CasSuspect>> searchCasSuspects(
+            @RequestParam(required = false) String searchTerm) {
+
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            return ResponseEntity.ok(service.getAllCases());
+        }
+
+        List<CasSuspect> casSuspects = service.searchCasSuspects(searchTerm);
+        return ResponseEntity.ok(casSuspects);
+    }
     @GetMapping
     public ResponseEntity<List<CasSuspect>> getAll() {
         return ResponseEntity.ok(service.getAllCases());
+    }
+    @GetMapping("/count")
+    public ResponseEntity<Long> getCount() {
+        return ResponseEntity.ok(service.getTotalCasSuspectsCount());
     }
 
     @GetMapping("/client/{clientId}")

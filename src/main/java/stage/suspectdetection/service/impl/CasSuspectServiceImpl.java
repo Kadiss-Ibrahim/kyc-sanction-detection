@@ -70,4 +70,13 @@ public class CasSuspectServiceImpl implements CasSuspectService {
         }
         repo.deleteById(id);
     }
+
+    @Override
+    public List<CasSuspect> searchCasSuspects(String searchTerm) {
+        return repo.searchCasSuspects(searchTerm);
+    }
+    @Override
+    public long getTotalCasSuspectsCount() {
+        return repo.count();
+    }
 }

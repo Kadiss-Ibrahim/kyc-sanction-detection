@@ -7,6 +7,7 @@ import stage.suspectdetection.entities.ListeSurveillance;
 import stage.suspectdetection.repositories.ListeSurveillanceRepository;
 import stage.suspectdetection.service.ListeSurveillanceService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -24,6 +25,7 @@ public class ListeSurveillanceServiceImpl implements ListeSurveillanceService {
         ListeSurveillance l = new ListeSurveillance();
         l.setNomListe(nom);
         l.setSource(source);
+        l.setDateCreation(LocalDate.now());
         return repo.save(l);
     }
 
@@ -49,6 +51,16 @@ public class ListeSurveillanceServiceImpl implements ListeSurveillanceService {
             liste.setSource(source);
         }
         return repo.save(liste);
+    }
+
+    @Override
+    public List<ListeSurveillance> searchListesSurveillance(String searchTerm) {
+        return repo.searchListesSurveillance(searchTerm);
+    }
+
+    @Override
+    public long getTotalListesSurveillanceCount() {
+        return repo.count();
     }
 
     @Override
